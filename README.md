@@ -34,3 +34,9 @@ Sem mais delongas pra rodar o bash execute `bash`, bem óbvio né?
 * [Redireção, Pipes e Man](Parte_2.md)
 * [Trabalhando com texto](Parte_3.md)
 * [Shell scripting](Parte_4.md)
+
+# Duvidas e sugestões
+
+Encontrou um erro grotesco de português, ficou com alguma dúvida ou acha que ta
+faltando alguma conteúdo, cria um issue que eu atualizo corrigo. PRs são bem
+vindos também. 👍
