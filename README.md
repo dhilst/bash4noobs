@@ -32,3 +32,5 @@ Sem mais delongas pra rodar o bash execute `bash`, bem óbvio né?
 
 * [Introdução](Parte_1.md)
 * [Redireção, Pipes e Man](Parte_2.md)
+* [Trabalhando com texto](Parte_3.md)
+* [Shell scripting](Parte_4.md)
