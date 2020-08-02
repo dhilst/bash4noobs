@@ -31,3 +31,4 @@ Sem mais delongas pra rodar o bash execute `bash`, bem óbvio né?
 # Básico
 
 * [Introdução](Parte_1.md)
+* [Redireção, Pipes e Man](Parte_2.md)
