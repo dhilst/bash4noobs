@@ -4,7 +4,7 @@ Execute `echo hello world`. Você vai a saida "hello world"
 
 Para executar um comando você simplesmente digita ele no terminal e da enter. O
 bash vai criar um novo processo executar o comando que você passou e exibir a
-saida.
+saída.
 
 # O básico de navegação
 
@@ -41,8 +41,8 @@ corrente.
 
 Caminhos relativos dependem do diretório corrente. então
 `Downloads/minecraft.jar`, `Music/ilarilarie.mp3`, `../test/testFoo.js` são
-exemplos de caminhos relativos. Eles funcionam concatenando concatenando o
-diretorio corrente a eles. Então se você ta em `/home/gecko`, o diretório
+exemplos de caminhos relativos. Eles funcionam concatenando o diretorio
+corrente a eles. Então se você ta em `/home/gecko`, o diretório
 `Downloads/minecraft.jar` é o mesmo que `/home/gecko/Downloads/minecraft.jar`.
 
 ### Listando diretórios
@@ -55,7 +55,7 @@ Esse é um bom momento pra introduzir flags e argumentos. Se você quiser listar
 conteúdo de um diretório sem ter que navegar até ele você pode passar o
 diretório como argumento. Por exemplo, `ls /tmp` vai listar tudo o que tem no
 `/tmp`.  Assim como você pode passar a pasta como argumento você também pode
-passar algumas flags que mudam a saida dos comandos, no caso do `ls` você pode
+passar algumas flags que mudam a saída dos comandos, no caso do `ls` você pode
 usar `-l` (mnemoico pra long) pra mostrar mais informações sobre o conteudo das
 pastas
 
@@ -72,7 +72,7 @@ Variaveis de ambiente são mais o menos como variáveis em linguagem de program�
 mas algumas são um pouco mágicas, o termo correto é "especiais", mas mágica soa
 mais legal.
 
-Pra criar uma variável você faz `<VARIAVEL>=<VALOR>`, exemplo `NOME=Daniel`. Pra
+Pra criar uma variável você usa `<VARIAVEL>=<VALOR>`, exemplo `NOME=Daniel`. Pra
 expandir uma variável você usa sifrão, ou dolar por exemplo: `$NOME`. Se você
 executar isso provavelmente vai tomar um erro `Daniel: command not found`, isso
 porque o bash expandiu `$NOME` pra `Daniel` e tentou executar `Daniel` como se
@@ -82,9 +82,11 @@ $NOME` por exemplo.
 Não é necessário que as variávies sejam em caixa alta, mas é uma conveção bem
 difundida, eu recomendo que você a siga, mas `nome=Hilst` vai funcionar da
 mesma forma, mas como o shell é _case sensitive_ essas são duas variávies
-diferentes. `echo $NOME $nome # -> Daniel Hilst`.
+diferentes. `echo $NOME $nome` expande para `Daniel Hilst`.
 
 Vamos ver algumas das variávies especiais agora,
+
+Pra ver todas as variáveis de ambiente da sua sessão de bash use o comando `env`.
 
 ## PATH
 
@@ -93,7 +95,7 @@ Essa é de long a variável mais importante
 Quando o você digita um comando, por exemplo `ls` o bash executa o ls, mas o que
 isso significa? Esses comandos são pequenos programas, geralmente feitos em C
 por uma galera muito louca das antiga. O que é importante a gente entender é que
-cada comando é um programa! Ele existe em algum lugar do filesystem. O shell
+cada comando é um programa! Ele existe em algum lugar do sistema de arquivos. O shell
 precisa encontrar esse comando na hora de executar ele, uma vez encontrado ele
 cria um novo processo, executa esse comando e imprime a saída dele no terminal.
 
@@ -104,7 +106,7 @@ separados por dois pontos, pra ver o conteudo: `echo $PATH`
 
 Quando você digita `echo hello world` o shell vai em cada diretório dessa lista
 e procura pelo comando que você chamou. Você pode chamar o comando passando o
-caminho completo também! Vamos ver como.
+caminho completo também! Vamos ver como:
 
 Existe um comando que mostra onde outros estão, o nome dele é `which`, então
 execute `which ls`
@@ -113,10 +115,13 @@ No meu caso deu `/bin/ls`, pode ser que no seu caso mude. De qualquer forma o
 interessante é que você pode executar o mesmo comando passando o caminho
 completo dele, por exemplo no meu caso `/bin/ls` é igual só `ls`. Se o comando
 que você quiser executar estiver no diretório corrente você pode usar
-`./comando`.
+`./comando`. Lembra do `.` na parte dos caminhos absolutos _vs_ relativos, esse
+é um exemplo onde `./comando` serve pra desambiguar de `comando`. Tome cuidado
+que `.comando` é um arquivo com um ponto na frente. Recapitulando, para executar
+o comando `X` no diretorio corrente você usa `./X`.
 
 Pra extender o PATH, ou seja, pra adicionar outro diretório para que o shell
-busque os comandos nesse diretório também você pode fazer `PATH=$PATH:/home/gecko/meu_diretorio`
+busque os comandos nesse diretório também você pode usar `PATH=$PATH:/home/gecko/meu_diretorio`
 
 Você tá basicamente concatenando setando o PATH pro conteudo dele mesmo, mais o
 diretório que você quer que que ele busque. Outro jeito de fazer isso, mas menos
@@ -135,13 +140,23 @@ corrente, Lembra que eu falei do PATH, a gente precisou colocar
 colocar um caminho relativo no PATH, ele só vai achar os comandos nesse
 diretório quando você estiver no diretório certo, exemplo, se você fizer
 
-`PATH=$PATH:meu_diretorio`, e dentro do `./meu_diretorio` tiver um comando,
+`PATH=$PATH:X`, e dentro do `./meu_diretorio` tiver um comando,
 `meu_comando`. Se você mudar de diretório `cd /tmp`  e tentar executar
 `meu_commando` ele vai procurar em `/tmp/meu_diretorio/meu_comando` e obviamente
 não vai funcionar.
 
 Com essa variável `$PWD` você não consegue setar o caminho absoluto sem ter que
 digitar ele todo, ex `PATH=$PATH:$PWD/meu_diretorio`
+
+Existe também a `OLDPWD` que é a variável que guarda o diretorio anterior, por
+exemplo se você executar esses comandos `cd /tmp; cd /home`, `OLDPWD` vai conter
+`/tmp` e PWD vai conter `/home`.
+
+## IFS
+
+Esse é o separador default usado pelo bash a gente vai ver mais sobre essa variável
+quando entrar na instrução de loop `for`. Basicamente ela é responstavel por dizer
+como o bash vai separar palavras pra iterar sobre elas, o default é `<space><tab><newline>'
 
 ----
 
@@ -164,19 +179,30 @@ pra declara exportando `export VARIAVEL=valor`
 
 Vamos fazer uns testes, crie uma variável `NOME=Daniel`. `echo $NOME # ->
 Daniel`, (to usando `-> XXX` pra representar a saída). Agora vamos executar
-outro shell, e dentro dele exibir a nossa variável, a gente pode fazer isso
-usando `bash -c 'echo $NOME'`. As aspas simples são importantes aqui, eu já
-explico porque. Se você executou o comando não deve ter saído nada, isso porque
-o novo bash não ve a variável `NOME`. Agora se você fizer `export NOME` e então
-repetir o comando interior você vai ver a saída. É isso o que export faz.
+outro shell, e dentro dele exibir a nossa variável.
+
+Primeiro execute `bash` no mesmo terminal que definiou a variavel, isso vai
+abrir outro shell, acora execute `echo $NOME`.  Se você executou o comando não
+deve ter saído nada, isso porque o novo bash não ve a variável `NOME`. Você pode
+confirmar que a variavel não existe executando `env` e procurando ela. Pra te
+poupar esforço você pode usar `env | grep NOME` pra filtar por `NOME` mas a gente
+só vai falar de pipe, (o `|` depois).
+
+Agora execute `exit` ou `Ctrl+D` para sair do bash criado anteriormente,
+exporte a variavel com `export NOME`, execute `bash` pra abrir outro bash de
+novo e então execute `echo $NOME` e dessa vez você deve ver o resultado.
+
+Recaptulando, a sua sessão é onde ficam as variáveis de ambiente, quando você exeucta
+um comando novo o bash cria um novo processo, esses novos processos só enxergam
+as variaveis que você exportou com `export VARIAVEL`.
 
 # Caracteres espcias, aspas simples, duplas e ordem de expansão
 
-Outra armadilha do shell é conhecer a ordem de expanção. O shell vai expandir
+Outra armadilha do shell é conhecer a ordem de expansão. O shell vai expandir
 variáveis e caracteres especiais antes de passar eles pros comandos. Antes de
 entrar no detalhe, a gente ainda não falou ainda desses caracteres especias.
 
-Você provavelmente viu, e se não viu vai ver ~ e * quando lidando com shell
+Você provavelmente viu, e se não viu vai ver ~ e * quando estiver lidando com shell
 script. Esses caracteres tem um signficado especial pro shell.
 
 `~` expande pra home, e é o mesmo que a variável `$HOME`.
@@ -194,16 +220,23 @@ serve pra conectar na maquina `host` como `root` e executar o comando. Mas se
 você fizer `ssh root@host -- ls *`, você espera que ele execute `ls *` na
 maquina `host` como usuário `root` mas o que ele vai fazer é exapndir o `*` na
 sua maquina e só então ir até a outra maquina e executar `ls
-arquivo_na_sua_maquina1 arquivo_na_sua_maquina2 arquivo_na_sua_maquina3` na
+arquivo\_na\_sua\_maquina1 arquivo\_na\_sua\_maquina2 arquivo\_na\_sua\_maquina3` na
 maquina `host`. Isso pode ser bem confuso no começo.
+
+Um exemplo fácil útil pra mostrar esse tipo de coisa é o `;`, que serve pra terminar
+comandos no shell. Se você quiser executar vários comandos você pode usar `comando1; comando2;
+comando3`. Mas e se você quiser remover um arquivo chamado `;`? Faça o teste,
+execute `touch ';'` pra criar o arquivo, e tente remove-lo com `rm ;`. Você vai
+obter o erro `rm: missing operand`, isso porque o comando está sendo interpretado
+como `rm` só. Para remover o arquivo você pode passar o nome entre aspas `rm ';'` vai
+funcionar.
+
+Um jeito de evitar a expansão é usar aspas ou barra invertida, por exemplo `ssh
+root@host -- ls \*` vai fazer o que você espera.
 
 Já a diferença entre aspas simples e duplas é bem simples, aspas simples não
 expandem variávies, são literais, aspas duplas expandem variávies'. Mas ambas
-não expandem os caracteres `*`, `~` e outros carateres especiáis.
-
-Isso explica porque era necessário aspas simples no `bash -c 'echo $NOME'`, do
-contrário você estaria executando `bash -c echo Daniel`, ou seja, expandindo a
-variável nome, *antes* de executar o novo bash.
+não expandem os caracteres `*`, `~` e outros carateres especiais.
 
 # Conclusão da primeira parte
 
@@ -211,15 +244,15 @@ Essa introdução foi meio longa mas eu quis cobrir o que eu acredito ser as
 armadilhas mais comuns do shell. Existe outras mas elas são menos frequentes.
 Agora a gente pode ir pra parte mais legal.
 
-* A gente sabe que os comandos shells são programas, que ele procura no PATH,
+* A gente sabe que os comandos shells são programas, que o shell procura no PATH,
 executa e mostra a saida.
 * Que a gente pode criar as nossas proprias variáveis de ambiente.
 * Que a gente pode extender o PATH para encontrar nossos próprios comandos
-* Pode exportar elas pra que sejam herdadas em outras sessões de shell.
+* Pode exportar elas com `export` pra que sejam herdadas em outras sessões de shell.
 * Que o shell expande os caracteres especiais e variáveis antes de executar os
-  comandos, ou seja que passa os valores expandidos pra eles
-* Que pode evitar essa expansão com aspas simples, e para caracteres especiais
-  duplas
+  comandos, ou seja que passa os valores expandidos pra eles.
+* Que é possivel evitar expansão de variáveis com aspas simples, e para caracteres
+  especiais duplas ou simples funcionam, assim como barra invertida.
 * O que é diretório corrente, caminho absoluto e relativo, e como navegar nos
   diretórios.
 

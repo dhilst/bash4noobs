@@ -5,13 +5,12 @@ qualquer coisa que você pode fazer no terminal usando seu shell preferido pode
 ser scriptável.
 
 Um script nada mais é que um arquivo com uma lista de comandos a serem
-executadas dentro dele e a primeira linha que fala quem é o comando que vai
-executar essa linha.
+executadas dentro dele e a primeira linha que fala quem é o interpretador que vai
+executar essa lista.
 
 Vamos começar simples
 
 Crie o seguinte arquivo, `hello.sh`
-
 
 ```
 #!/bin/bash
@@ -20,11 +19,13 @@ echo Hello World
 ```
 
 Agora de permissão de execução pra ele `chmod +x hello.sh`. E finalmente
-execute: `./hello.sh # -> Hello Wolrd`. Yay, você fez seu primeiro shell
+execute: `./hello.sh # -> Hello World`. Yay, você fez seu primeiro shell
 script. Como você pôde ver não tem nada de especial nele a não ser a primeira
 linha. O nome dela é _shebang_ a propósito.
 
-Quando você executa um comando, que é um arquivo de texto, e começa com essa linha o shell pensa _"Hmm, vou pegar o conteudo desse script e passar pro comando depois do #!_. E é literalmente isso que ele faz.
+Quando você executa um comando, que é um arquivo de texto, e começa com essa
+linha o shell pensa _"Hmm, vou pegar esse arquivo e passar pro
+comando depois do #!_. E é literalmente isso que ele faz.
 
 Você pode criar o script abaixo pra provar isso pra você mesmo.
 
@@ -34,9 +35,22 @@ Você pode criar o script abaixo pra provar isso pra você mesmo.
 Ihaa eu sou foda!
 ```
 
+Resumindo executar um `arquivo.sh` com `#!/bin/bash` no começo equivale a rodar
+`bash arquivo.sh`, isso pode ser util se você quiser fazer ferramentas que funcionem
+como linguagens de script, tudo o que você precisa fazer é um comando que le os
+comandos de um arquivo e usar a shebang pra executa-lo com um script.
+
 # Shell scripting
 
-Se você vai fazer scripts você vai querer fazer coisas como, if, while, for, definir funcões etc. São coisas bem simples de fazer em shell só muda um pouco da sintaxe.
+Se você vai fazer scripts você vai querer fazer coisas como, if, while, for,
+definir funcões etc. São coisas bem simples de fazer em shell só muda um pouco
+da sintaxe. O restante desse capítulo vai focar nessas construções, nos
+capitulos seguintes a gente vai ver mais receitas de com resolver problemas
+específicos combinando comandos. Shell scripting é basicamente a junção dessas
+instruções de controle com a combinação dos comandos. Eu não vou cobrir o bash
+inteiro aqui até porque tem muita coisa.  Eu deixei um link para o manual do
+bash que é bem completo, praticamente tudo que eu aprendi foi do manual e até
+hoje considero a melhor fonte pra aprender bash.
 
 ## Condicionais e status de saída
 
@@ -46,17 +60,22 @@ sucesso (0) ou falha (literalmente qualquer valor menos 0). Esse valor fica
 salvo na variável $?.
 
 Por exemplo, execute o comando `mais_10mil_na_conta`, seria muito bom se um
-comando assim existisse, mas infelismente ele não existe. Se você exeutar `echo
-$?` provavelmente você vai receber 127 como resposta. Essa variavel foi
+comando assim existisse, mas infelizmente ele não existe. Se você executar `echo
+$?` provavelmente você vai receber 127 como resposta. Essa variável foi
 confiugrada pelo shell, já que o comando não existe ele não tem com _"sair com
 falha"_. Agora tenta esse `ls arquivo_que_nao_existe` e então `echo $?`, deve
-printar 1 na saída, nesse caso o `ls` saiu com valor 1 (erro) e o shell pegou esse valor e colocou na variável `$?`.
+printar 1 na saída, nesse caso o `ls` saiu com valor 1 (erro) e o shell pegou
+esse valor e colocou na variável `$?`.
 
-Mas o que isso tem a ver com condicionais? Bom basicamente tudo! Porque o shell vai considerar qualquer saída com 0 (sucesso) como verdadeiro e qualquer outra coisa como falso. Isso é meio confuso no começo mas quer dizer que você pode usar qualquer comando como a condição de um if ou um while e ele só vai entrar no if ou permanecer no while enquanto o comando sair com sucesso (0).
+Mas o que isso tem a ver com condicionais? Bom basicamente tudo! Porque o shell
+vai considerar qualquer saída com 0 (sucesso) como verdadeiro e qualquer outra
+coisa como falso. Isso é meio confuso no começo mas quer dizer que você pode
+usar qualquer comando como a condição de um if ou um while e ele só vai entrar
+no if ou permanecer no while enquanto o comando sair com sucesso (0).
 
 ## if
 
-A sintaxe do `if` do batch é a seguinte
+A sintaxe do `if` do bash é a seguinte
 
 ```
 if COND; then
@@ -68,7 +87,10 @@ else
 fi
 ```
 
-`fi`? Sim `fi`, `if` ao contrário. Na parte da condição você pode colocar quaquer comando
+`fi`? Sim `fi`, `if` ao contrário, eu não fiz as regras, eu só sigo elas. Na
+parte da condição você pode colocar quaquer comando, como eu disse anteriormente.
+
+Então, por exemplo:
 
 ```
 if grep -q daniel /etc/passwd; then
@@ -84,7 +106,7 @@ envolvidas em colchetes, `[ EXPR ]`, ou ainda `[[ EXPR ]]`. A diferença do
 primeiro e do segundo é que o segundo é específico do bash enquanto o primeiro
 é o definido pelo padrão POSIX. Se você sabe que vai rodar o script em um bash
 (se a tiver `#!/bin/bash` na sheebang) então é seguro usar `[[ EXPR ]]`. Na
-minha experiência raramente você vai precisar de um script que seja portavel o
+minha experiência raramente você vai precisar de um script que seja portável o
 a ponto de exigir o `[ EXPR ]`, por isso eu recomendo o uso da forma com
 colchetes duplos. Pra testar se um arquivo existe por exemplo
 
@@ -113,7 +135,9 @@ fi
 Tudo isso você pode encontrar no [manual](https://linux.die.net/man/1/bash).
 Busque por `[[`. Se você estiver usando o comando man use `/` para procurar.
 
-## while
+Referência: https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Conditional-Constructs
+
+## while e for
 
 O while é parecido com o if
 
@@ -136,13 +160,11 @@ done
 
 Aqui `!` é uma negação, inverte o valor de `$?`. Esse comando pode ser lido
 basicamente como, equanto não conseguir conectar na maquina `host` como `root`,
-espere um segundo, e tente de novo. Imagina que voê rebootou a maquina e quer
+espere um segundo, e tente de novo. Imagina que você rebootou a maquina e quer
 conectar nela, em vez de ficar executando o comando de novo e de novo e de novo
 eu uso esse tipo de truque e espero a maquina voltar.
 
-## for
-
-A syntaxe do `for` é a seguinde
+Já a sintaxe do `for` é a seguinte
 
 ```
 for I in LIST_EXPR; do
@@ -151,7 +173,7 @@ done
 ```
 
 Eu usei `LIST_EXPR` pra representar uma expressão que expande para uma lista.
-Por padrão qualquer coisa separa por espações é interpretado como uma lista,
+Por padrão qualquer coisa separa por espaços é interpretado como uma lista,
 por exemplo
 
 ```
@@ -168,19 +190,8 @@ Olá Alex
 Olá Bruno
 ```
 
-Fácil de entender né? Mas se você fizer
-
-```
-NOMES=Daniel Alex Bruno
-for N in $NOMES; do
-  echo "Olá $N"
-done
-```
-
-Não vai funcionar, ele vai imprimir "Olá Daniel Alex Bruno", em vez de 3 linhas.
-Isso porque a variavel NOME é uma string e não um array. Pra declarar um array
-em bash você usa a seguinte sintaxe `V=(A B C)`. E pra expandir todos elementos
-`$V[*]`
+Pra declarar um array em bash você usa a seguinte sintaxe `V=(A B C)`. E pra
+expandir todos elementos `$V[*]`
 
 ```
 NOMES=(Daniel Alex Bruno)
@@ -189,7 +200,7 @@ for N in $NOMES[*]; do
 done
 ```
 
-Pra expandir só um arugmento você pode usar `${NOME[!]}` por exemplo pra obter o
+Pra expandir só um arugmento você pode usar `${NOME[N]}` por exemplo pra obter o
 primeiro valor do array `${NOMES[0]}`.
 
 _PS: No zsh os arrays começam em 1, no bash em 0!_
@@ -210,6 +221,8 @@ hora de iterar no for. Você pode mudar ela pra `:` por exemplo
 ```
 IFS=: for p in $PATH; do echo $p; done
 ```
+
+Referência: https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Looping-Constructs
 
 ## case
 
@@ -305,7 +318,7 @@ hello ()
 ```
 
 Outra pegadinha é que se você não passar nenhuma variável ele não vai reclamar,
-as variaveis vao simplesmente ficar vazias dentro da função.
+as variaveis vão simplesmente ficar vazias dentro da função.
 
 ```
 hello #-> Olá , você tem  anos
@@ -316,12 +329,12 @@ $V ]]`, vamos corrigir a nossa função.
 
 ```
 hello() {
-  if [[ -z $1 ]]; then
+  if [[ -z "$1" ]]; then
     echo "Você não tem nome não?"
     return
   fi
 
-  if [[ -z $2 ]]; then
+  if [[ -z "$2" ]]; then
     echo "Você não tem idade não?"
     return
   fi
@@ -355,6 +368,30 @@ if maior 18; then echo "Já pode combrar birita"; fi
 
 A ideia de que 0 é verdadeiro é meio contra intuitiva, mas você se acostuma com
 o tempo.
+
+Outra variável importante é `$@` ela expande para todas os argumentdos da função
+chamada, por exeplo
+
+```
+foo() {
+  echo $@ | rev
+}
+
+foo 1 2 3 # -> 3 2 1
+```
+
+Para criar variaveis locais dentro de funções use a keyword local
+
+```
+foo() {
+  local mylocalvar=1
+  echo $mylocalvar
+}
+```
+
+Variaveis locais não seguem a convenção de serem maiúsculas.
+
+Referência: https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Shell-Functions
 
 ## Combinadores && (AND) e || (OR)
 
@@ -396,7 +433,7 @@ Mais uma vez isso permite você escrever scripts bem enxutos. Geralmente usar
 `if` deixa o codigo mais legível.
 
 
-## Substituição
+## Substituição de comandos
 
 Essa é uma das partes mais legais. Você pode usar ``comando`` ou `$(comando)`
 pra substituir a saida de um comando. Por exemplo
@@ -416,11 +453,137 @@ Pra concatenar o caminho corrente no nome de um arquivo `$(pwd)/meu_arquivo`.
 
 Iterar sobre os arquivos em `/tmp`, `for i in $(ls /tmp); do echo $i; done`
 
+Referência: https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Command-Substitution
+
 ## Mais variáveis especiais
 
 Algumas variávies são especiais dentro de um script. Assim funções você pode
 receber os argumentos com `$1`, `$2`, `$3`, ... `$n`. A `$0` guarda o nome do
-script. `$#` a quantidade de arugmentos passados pro script.
+script. `$#` a quantidade de arugmentos passados pro script. `$@` expande pra todos
+os argumentos passados pro script ou função separados por espaço.
 
 Além dessas existem outras. `$$` guarda o PID do bash que ta executando.
 
+## Process substitution
+
+Vamos supor que você tenha um comando que le um arquivo, e que você queira passar a
+saída de um outro comando para o primeiro. A primeira coisa que a gente pensa é usar
+pipe `comando1 | comando2` mas pra isso o `comando2` precisa ler da entrada padrão
+o que acontece se ele não suportar isso?
+
+Bom você pode redirecionar pra um arquivo e usar o arquivo como argumento, `comando1 > saida; comando2 saida`,
+mas tem um jeito melhor que isso.
+
+```
+comando2 <(comando1)
+```
+
+A sintaxe `<(comando)` executa o `comando` a cria um pseudo arquivo que que pode ser passado
+como parametro para outros comandos, vamos fazer um teste.
+
+```
+cat <(ps aux)
+```
+
+Pra ver o "arquivo" que ele gera você pode usar ls
+
+```
+ls <(ps) # -> /proc/self/fd/11
+```
+
+Referência: https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Process-Substitution
+
+## Expansões de parametros
+
+_Atenção: Isso é uma funcionalidade exclisiva do bash, não vai funcionar no zsh_
+
+É possivel fazer algumas mágicas com bash durante a expansão das variáveis
+
+```
+FOO="foo:bar:tar"
+
+# Converter para maiúsculas
+echo ${FOO^^} # -> FOO:BAR:TAR
+
+# Só a primeira maiúscula
+echo ${FOO^^} # -> Foo:bar:tar
+
+# Remove tudo antes do primeiro :
+echo ${FOO#*:} # -> bar:tar
+
+# Remove tudo antes do ulitmo :
+echo ${FOO##*:} # -> tar
+
+Remove tudo antes do primeiro :
+echo ${FOO%%:*} # -> foo
+```
+
+A explicação aqui é `#` serve pra remover um prefixo e `%` pra remover suffixo.
+Quando duplicados eles ficam _eager_, e removem até o ultimo ou primeiro padrão
+encontrado. O `*` fica do lado do que vai ser removido, é equivalente ao `*.txt`
+por exemplo num comando, o `*` vai dar match em tudo antes de `.txt`.
+
+Isso é util pra pegar o nome do diretorio corrente por examplo sem o caminho `echo ${PWD##*/}`
+Ou pra pegar caminho do diretorio pai ao diretorio corrente `echo ${PWD%/*}`
+
+Ainda é possivel substituir padrões
+
+```
+FOO="foo:bar:tar"
+
+echo ${FOO/oo/00} # -> f00:bar:tar
+```
+
+Definir variaveis valores padrão
+
+```
+echo ${BAR:-123}
+```
+
+Referência: https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Shell-Parameter-Expansion
+
+## Expressões aritiméticas
+
+Para executar expressões aritiméticas no bash usa-se a sintaxe $((expression))
+por exemplo `echo $((1 + 1 / 1 * 1))`
+
+Copiado descaradamente do manual:
+
+Operador|Descrição
+----|----
+id++ id--|Pvariable post-increment and post-decrement
+- +|unary minus and plus
+++id --id|variable pre-increment and pre-decrement
+! ~|logical and bitwise negation
+**|exponentiation
+* / %|multiplication, division, remainder
++ -|addition, subtraction
+<< >>|left and right bitwise shifts
+
+Referência: https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Shell-Arithmetic
+
+## `source` e carregando variáveis de outros arquivos
+
+Você já deve ter executado `source algum_arquivo.sh` ou `. algum_arquivo.sh`.
+Qual a diferença de executar um script assim `. script.sh` ou assim
+`./script.sh`?
+
+Basicamente, quando você executa com `./` o bash cria um novo processo e
+executa o script pra você, isso é o mesmo que a gente tem visto sempre, isso
+quer dizer que as variáveis e os comandos no `script.sh` não vão podem editar,
+carregar ou fazer nada na sua sessão.
+
+Quando você executa um script assim `. script.sh` você está executando o script
+no mesmo contexto que o seu shell. Diferente do que a gente viu antes, nenhum
+processo novo é criado. Isso quer dizer que o `script.sh` pode declarar
+variáveis, editar, declarar funções etc.
+
+Esse tipo de recurso é muito usado para carregar variáveis de ambiente na
+sessão, e agora você sabe porque isso funciona e `./script.sh` nunca
+funcionaria.
+
+Outro uso comum é para carregar funções, é comum colocar todas as suas funções
+num arquivo separado e executar `source myfunctions.sh` em varios scritps
+diferentes para fazer uso dessas funções.
+
+Referência: https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html#Bourne-Shell-Builtins

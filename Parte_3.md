@@ -7,6 +7,9 @@ extrar a informação que a gente que.
 Pra conseguir isso a gente precisa filtrar e transformar o texto até chegar no
 resultado que a gente espera.
 
+Eu vou usar um comentario com uma seta depois do comando pra mostar a saída que é esprada
+por exemplo `echo 1 2 3 # -> 1 2 3`, `echo $((1 + 1)) # -> 2`
+
 
 ## Filtrando verticalmente com grep
 
@@ -20,14 +23,16 @@ COMANDO | grep PATTERN
 Exemplo
 
 ```
-ps -ef | grep init
+echo "foo\nboo\nbar\ntar" | grep oo # -> foo
+                                    # -> boo
 ```
 
 Para inverter, ou seja, filtrar só as linhas que não tenham o padrão você pode
 usar o `-v`
 
 ```
-ps -ef | grep -v root`
+echo "foo\nboo\nbar\ntar" | grep -v oo # -> bar
+                                       # -> tar
 ```
 
 ## Substituindo com tr
@@ -36,10 +41,15 @@ Pra fazer substituições simples você pode usar o `tr`. Lembra do PATH, a gent
 exibia ele com `echo` mas era horrivel de ler, então tenta o seguinte
 
 ```
-echo $PATH | tr ':' '\n'
+echo foo:bar | tr ':' '\n' # -> foo
+                           # -> bar
 ```
 
-Ele deve mostra a lista de diretórios no PATH linha a linha
+Isso é bem util pra mostrar o PATH de um jeito mais legivel
+
+```
+echo $PATH | tr ':' '\n'
+```
 
 ## Subtituindo com sed
 
@@ -47,6 +57,7 @@ Para coisas mais complexas você pode usar `sed` pra fazer uma substituição us
 
 ```
 echo foo bar | sed 's/o/0/g' # -> f00 bar
+echo foo bar | sed 's/^./4/' # -> 400 bar
 ```
 
 ## Cortando colunas com cut
@@ -61,7 +72,13 @@ echo foo bar tar zar | cut -f2-3 -d' ' # -> bar tar
 
 O `-f` é  de _field_ e `-d` de _delimiter_.
 
-# Filtrando com AWK
+## Invertendo a entrada com rev
+
+```
+echo 1 2 3 | rev # -> 3 2 1
+```
+
+## Filtrando com AWK
 
 AWK, é uma linguagem de programção a parte. Geralmente eu uso somente o básico
 dela. Quando os outros comandos não dão conta.
@@ -81,7 +98,7 @@ Mas com AWK a gente pode fazer numa comando só
 
 ```
 echo "foo bar tar zar\ntick tack toe" | awk '{print $NF}' # -> zar
-                                                               toe
+                                                          # -> toe
 ```
 
 Nesse caso `$NF` é a ultima coluna. Pra saber mais sobre AWK eu recomendo
@@ -103,4 +120,3 @@ echo "foo bar tar zar\ntick tack toe" |  awk '/foo/ {print $NF}' # -> zar
 
 Em questão de performance, raramente isso vai fazer alguma diferença, mas menos
 comandos geralmente é mais bom conhecer as alternativas.
-
