@@ -1,6 +1,6 @@
 # Hello world
 
-Execute `echo hello world`. Você vai a saida "hello world"
+Execute `echo hello world`. Você vai a saída "hello world"
 
 Para executar um comando você simplesmente digita ele no terminal e da enter. O
 bash vai criar um novo processo executar o comando que você passou e exibir a
@@ -14,7 +14,7 @@ pro shell scripting. Os três comandos básicos que todo mundo precisa saber sã
 
 `pwd` vai mostrar em que diretório você ta no momento. Assim como você navega em
 pastas usando o Explorer você também pode navegar usando a linha de comando.
-Novamente `pwd` é o diretório corrente, na literatura é comunmente chamdo de
+Novamente `pwd` é o diretório corrente, na literatura é comunmente chamado de
 _CWD_ _(current working directory)_.
 
 Para navegar entre os diretórios você usa `cd` e passa o diretório como
@@ -23,7 +23,7 @@ Diferente do Windows, que tem letras do tipo `C:/`, `D:/` em sistemas derivados
 do Unix só existe um diretório raiz e é sempre `/`. A partir desse diretório
 você pode chegar em qualquer outro no sistema.
 
-Para ir para o direório anterior na hirerquia você usa `..`. Então pra subir um
+Para ir para o diretório anterior na hierarquia você usa `..`. Então pra subir um
 diretório, `cd ..`. Pra subir dois `cd ../..`. Pra subir dois diretórios e
 depois entrar no diretório teste `cd ../../test`.
 
@@ -41,7 +41,7 @@ corrente.
 
 Caminhos relativos dependem do diretório corrente. então
 `Downloads/minecraft.jar`, `Music/ilarilarie.mp3`, `../test/testFoo.js` são
-exemplos de caminhos relativos. Eles funcionam concatenando o diretorio
+exemplos de caminhos relativos. Eles funcionam concatenando o diretório
 corrente a eles. Então se você ta em `/home/gecko`, o diretório
 `Downloads/minecraft.jar` é o mesmo que `/home/gecko/Downloads/minecraft.jar`.
 
@@ -49,14 +49,14 @@ corrente a eles. Então se você ta em `/home/gecko`, o diretório
 
 Para ver o que tem nos diretórios (não é pasta!) você usa o comando `ls`,
 (mnemonico para _list_).  Executa aí pra você ver o resultado. Ele vai mostra o
-conteudo do diretório que você tá.
+conteúdo do diretório que você tá.
 
 Esse é um bom momento pra introduzir flags e argumentos. Se você quiser listar o
 conteúdo de um diretório sem ter que navegar até ele você pode passar o
 diretório como argumento. Por exemplo, `ls /tmp` vai listar tudo o que tem no
 `/tmp`.  Assim como você pode passar a pasta como argumento você também pode
 passar algumas flags que mudam a saída dos comandos, no caso do `ls` você pode
-usar `-l` (mnemoico pra long) pra mostrar mais informações sobre o conteudo das
+usar `-l` (mnemoico pra long) pra mostrar mais informações sobre o conteúdo das
 pastas
 
 Beleza, então a gente já sabe que:
@@ -66,14 +66,14 @@ Beleza, então a gente já sabe que:
 * Pode ver qual o diretório corrente com `pwd`
 * E pode ver o que tem nos diretórios com o comando `ls`
 
-# Variavies de ambiente (Environment Variables)
+# Variáveis de ambiente (Environment Variables)
 
-Variaveis de ambiente são mais o menos como variáveis em linguagem de programção
+Variáveis de ambiente são mais o menos como variáveis em linguagem de programção
 mas algumas são um pouco mágicas, o termo correto é "especiais", mas mágica soa
 mais legal.
 
 Pra criar uma variável você usa `<VARIAVEL>=<VALOR>`, exemplo `NOME=Daniel`. Pra
-expandir uma variável você usa sifrão, ou dolar por exemplo: `$NOME`. Se você
+expandir uma variável você usa cifrão, ou dolar por exemplo: `$NOME`. Se você
 executar isso provavelmente vai tomar um erro `Daniel: command not found`, isso
 porque o bash expandiu `$NOME` pra `Daniel` e tentou executar `Daniel` como se
 fosse um comando. Pra mostrar o conteúdo de uma variavel você pode usar `echo
@@ -102,7 +102,7 @@ cria um novo processo, executa esse comando e imprime a saída dele no terminal.
 Não se preocupa com a parte do _cria um novo processo_ por enquanto. Ela vai ser
 mais importate depois, mas agora foca no _precisa encontrar esse comando_. Pra
 fazer isso o shell usa a variável `PATH`. Essa variavel é uma lista de caminhos
-separados por dois pontos, pra ver o conteudo: `echo $PATH`
+separados por dois pontos, pra ver o conteúdo: `echo $PATH`
 
 Quando você digita `echo hello world` o shell vai em cada diretório dessa lista
 e procura pelo comando que você chamou. Você pode chamar o comando passando o
@@ -118,12 +118,12 @@ que você quiser executar estiver no diretório corrente você pode usar
 `./comando`. Lembra do `.` na parte dos caminhos absolutos _vs_ relativos, esse
 é um exemplo onde `./comando` serve pra desambiguar de `comando`. Tome cuidado
 que `.comando` é um arquivo com um ponto na frente. Recapitulando, para executar
-o comando `X` no diretorio corrente você usa `./X`.
+o comando `X` no diretório corrente você usa `./X`.
 
 Pra extender o PATH, ou seja, pra adicionar outro diretório para que o shell
 busque os comandos nesse diretório também você pode usar `PATH=$PATH:/home/gecko/meu_diretorio`
 
-Você tá basicamente concatenando setando o PATH pro conteudo dele mesmo, mais o
+Você tá basicamente concatenando setando o PATH pro conteúdo dele mesmo, mais o
 diretório que você quer que que ele busque. Outro jeito de fazer isso, mas menos
 recomendado é `PATH=/home/gecko/meu_diretorio:$PATH`. A diferença do primeiro a
 ordem que os diretórios vão ser buscados. Se você colocar no começo o shell vai
@@ -148,7 +148,7 @@ não vai funcionar.
 Com essa variável `$PWD` você não consegue setar o caminho absoluto sem ter que
 digitar ele todo, ex `PATH=$PATH:$PWD/meu_diretorio`
 
-Existe também a `OLDPWD` que é a variável que guarda o diretorio anterior, por
+Existe também a `OLDPWD` que é a variável que guarda o diretório anterior, por
 exemplo se você executar esses comandos `cd /tmp; cd /home`, `OLDPWD` vai conter
 `/tmp` e PWD vai conter `/home`.
 
@@ -194,7 +194,7 @@ novo e então execute `echo $NOME` e dessa vez você deve ver o resultado.
 
 Recaptulando, a sua sessão é onde ficam as variáveis de ambiente, quando você exeucta
 um comando novo o bash cria um novo processo, esses novos processos só enxergam
-as variaveis que você exportou com `export VARIAVEL`.
+as variáveis que você exportou com `export VARIAVEL`.
 
 # Caracteres espcias, aspas simples, duplas e ordem de expansão
 
@@ -245,7 +245,7 @@ armadilhas mais comuns do shell. Existe outras mas elas são menos frequentes.
 Agora a gente pode ir pra parte mais legal.
 
 * A gente sabe que os comandos shells são programas, que o shell procura no PATH,
-executa e mostra a saida.
+executa e mostra a saída.
 * Que a gente pode criar as nossas proprias variáveis de ambiente.
 * Que a gente pode extender o PATH para encontrar nossos próprios comandos
 * Pode exportar elas com `export` pra que sejam herdadas em outras sessões de shell.
@@ -255,4 +255,3 @@ executa e mostra a saida.
   especiais duplas ou simples funcionam, assim como barra invertida.
 * O que é diretório corrente, caminho absoluto e relativo, e como navegar nos
   diretórios.
-
