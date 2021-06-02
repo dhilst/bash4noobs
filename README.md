@@ -15,7 +15,7 @@ for Linux](https://docs.microsoft.com/pt-br/windows/wsl/install-win10) e então
 dentro do Linux vai ter acesso ao bash.
 
 * Intalando no Debian ou Ubuntu: `apt install bash`
-* Archlinux: `pacman -Syu bash`
+* Arch Linux: `pacman -Syu bash`
 * MacOS `brew install bash`
 
 # Rodando
@@ -35,8 +35,7 @@ Sem mais delongas pra rodar o bash execute `bash`, bem óbvio né?
 * [Trabalhando com texto](Parte_3.md)
 * [Shell scripting](Parte_4.md)
 
-# Duvidas e sugestões
+# Dúvidas e sugestões
 
 Encontrou um erro grotesco de português, ficou com alguma dúvida ou acha que ta
-faltando alguma conteúdo, cria um issue que eu atualizo corrigo. PRs são bem
-vindos também. 👍
+faltando algum conteúdo, cria um issue que eu atualizo corrigo. PRs são bem-vindos também. 👍
